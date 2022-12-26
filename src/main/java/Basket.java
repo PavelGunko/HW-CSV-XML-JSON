@@ -1,4 +1,5 @@
 import com.google.gson.Gson;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -47,15 +48,13 @@ public class Basket {
 
     /*метод сохранения корзины в текстовый файл */
     public void saveTxt(File textFile) throws IOException {
-        try (PrintWriter writer = new PrintWriter(textFile);)
-        {
+        try (PrintWriter writer = new PrintWriter(textFile);) {
             writer.println(names.length);
             for (int i = 0; i < names.length; i++) {
                 writer.println(names[i] + "\t" + prices[i] + "\t" + amounts[i]);
 
             }
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             System.out.println(e.getMessage());
         }
     }
@@ -67,7 +66,7 @@ public class Basket {
         String[] names = null;
         int[] prices = null;
         int[] amounts = null;
-        Basket basket=null;
+        Basket basket = null;
         try (Scanner scanner = new Scanner(new FileInputStream(textFile));) {
             int size = Integer.parseInt(scanner.nextLine());
             names = new String[size];
@@ -86,8 +85,7 @@ public class Basket {
             for (int i = 0; i < names.length; i++) {
                 basket.addToBasket(i, amounts[i]); //через конструктор
             }
-        }
-        catch (IOException ex) {
+        } catch (IOException ex) {
             System.out.println(ex.getMessage());
         }
 
@@ -101,7 +99,7 @@ public class Basket {
     public void saveJson(File file) throws IOException {
         try (PrintWriter writer = new PrintWriter(file);) {
             Gson gson = new Gson();
-            String json= gson.toJson(this);
+            String json = gson.toJson(this);
             writer.println(json);
         }
 
@@ -117,7 +115,6 @@ public class Basket {
 
         }
     }
-
 
 
 }
