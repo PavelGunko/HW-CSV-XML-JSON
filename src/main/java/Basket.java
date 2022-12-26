@@ -1,4 +1,8 @@
-import java.io.*;
+import com.google.gson.Gson;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.Scanner;
 
 public class Basket {
@@ -41,7 +45,7 @@ public class Basket {
         System.out.println("Итого: " + sumProducts + " руб.");
     }
 
-    //метод сохранения корзины в текстовый файл;
+    /*метод сохранения корзины в текстовый файл */
     public void saveTxt(File textFile) throws IOException {
         try (PrintWriter writer = new PrintWriter(textFile);)
         {
@@ -91,5 +95,29 @@ public class Basket {
 
 
     }
+    /* реализация json
+        запись */
+
+    public void saveJson(File file) throws IOException {
+        try (PrintWriter writer = new PrintWriter(file);) {
+            Gson gson = new Gson();
+            String json= gson.toJson(this);
+            writer.println(json);
+        }
+
+    }
+    /* реализация json
+        считывание */
+
+    public static Basket loadFromJson(File file) throws IOException {
+        try (Scanner scanner = new Scanner(new FileInputStream(file));) {
+            Gson gson = new Gson();
+            String json = scanner.nextLine();
+            return gson.fromJson(json, Basket.class);
+
+        }
+    }
+
+
 
 }

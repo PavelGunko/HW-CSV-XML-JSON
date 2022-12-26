@@ -1,16 +1,22 @@
-import java.io.*;
-import java.util.Scanner;
+import org.w3c.dom.Document;
+import org.xml.sax.SAXException;
 
-import java.io.*;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathFactory;
+import java.io.File;
+import java.io.IOException;
 import java.util.Scanner;
 
 
 public class Main {
-    public static void main(String[] args)throws Exception {
-
-
+    public static void main(String[] args) throws Exception {
         Basket basket = new Basket();
+        ClientLog clientLog = new ClientLog();  //создание объекта созданного класса
 
+        //прайс магазина
         Scanner scanner = new Scanner(System.in);
         System.out.println("Список возможных товаров для покупки");
         String[] products = {"Хлеб", "Яблоки", "Молоко"};
@@ -20,22 +26,23 @@ public class Main {
 
         }
 
-        File file = new File("basket.txt");
+        File file = new File("basket.json");
         try {
             if (file.createNewFile() || file.length() == 0) {
                 basket = new Basket(products, prices);
             } else {
-                basket = Basket.loadFromTxtFile(file);
+                basket = Basket.loadFromJson(file);
             }
         } catch (IOException ex) {
             System.out.println(ex.getMessage());
         }
 
-        int[] productsCount = new int[products.length];
+
         while (true) {
             System.out.println("Выберите товар и количество или введите `end`");
             String inputString = scanner.nextLine();
             if (inputString.equals("end")) {
+                clientLog.exportAsCSV(new File("client.csv"));
                 break;
             }
             String[] parts = inputString.split(" ");
@@ -44,15 +51,22 @@ public class Main {
 
             if (productCount != 0) {
                 basket.addToBasket(productNumber, productCount);
+                clientLog.log(productNumber, productCount);
+                //через метод log и с записью в csv
+
             }
             try {
-                basket.saveTxt(file);
+                basket.saveJson(file);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         }
 
-
         basket.printCart();
+
+
+
+
     }
 }
+
